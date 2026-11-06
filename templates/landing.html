@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habitat Studio 3D - NASA Space Apps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white">
+
+    <!-- Écran de Chargement Spatial (Splash Screen) -->
+    <div id="splash-screen" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center space-y-6 hidden transition-opacity duration-500">
+        <div class="relative flex items-center justify-center">
+            <div class="w-24 h-24 rounded-full border-4 border-cyan-500/20 border-t-cyan-400 animate-spin"></div>
+            <div class="absolute w-12 h-12 rounded-full bg-cyan-500/10 animate-ping"></div>
+            <span class="absolute font-mono-tech text-cyan-400 text-xs font-bold">NASA</span>
+        </div>
+        <div class="text-center space-y-2">
+            <p id="splash-status" class="font-mono-tech text-cyan-400 text-sm uppercase tracking-widest animate-pulse">Initialisation de la séquence d'accès...</p>
+            <p class="font-mono text-slate-500 text-xs">HABITAT_OS // V2.6 TELEMETRY</p>
+        </div>
+        <!-- Barre de progression -->
+        <div class="w-64 h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+            <div id="splash-bar" class="h-full bg-gradient-to-r from-cyan-500 to-teal-400 w-0 transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <!-- En-tête / Navbar -->
+    <header class="border-b border-cyan-500/20 bg-slate-900/50 backdrop-blur-md px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_#22d3ee]"></div>
+            <span class="text-sm font-bold tracking-widest text-cyan-400 font-mono-tech uppercase">NASA SPACE APPS // CHALLENGE</span>
+        </div>
+        <div class="text-xs font-mono text-slate-400">MISSION : PUREFLOW & NHV COMPLIANCE</div>
+    </header>
+
+    <!-- Corps Principal (Hero Section) -->
+    <main class="flex-1 flex items-center justify-center px-6 py-12">
+        <div class="max-w-4xl text-center space-y-8">
+            
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800/60 text-cyan-300 text-xs font-mono">
+                <span>🚀 Système de Conception d'Habitats Spatiaux</span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
+                Habitat Studio <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">3D</span>
+            </h1>
+
+            <p class="text-base md:text-lg text-slate-400 max-w-2xl mx-auto font-light leading-relaxed">
+                Concevez, testez et validez des configurations d'habitats spatiaux en temps réel conformément aux normes d'ergonomie et de volume habitable (NHV) de la NASA.
+            </p>
+
+            <div class="pt-4">
+                <button onclick="startLaunchSequence()" class="inline-flex items-center space-x-3 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-mono font-bold px-8 py-4 rounded-xl transition shadow-lg shadow-cyan-950 uppercase tracking-widest text-sm border border-cyan-400/30">
+                    <span>Lancer l'Application 3D</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-12 text-left">
+                <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800/80 shadow-md">
+                    <div class="text-cyan-400 text-xl mb-2">📐</div>
+                    <h3 class="font-mono text-xs font-bold text-slate-200 uppercase">Modélisation Cylindrique</h3>
+                    <p class="text-xs text-slate-400 mt-1">Ajustez les dimensions de la station et visualisez l'intérieur avec la vue en coupe dynamique.</p>
+                </div>
+                <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800/80 shadow-md">
+                    <div class="text-cyan-400 text-xl mb-2">⚡</div>
+                    <h3 class="font-mono text-xs font-bold text-slate-200 uppercase">Gizmo & Placement 3D</h3>
+                    <p class="text-xs text-slate-400 mt-1">Insérez des modules (sommeil, lab, sport, sanitaires) et déplacez-les sans collisions.</p>
+                </div>
+                <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800/80 shadow-md">
+                    <div class="text-cyan-400 text-xl mb-2">📊</div>
+                    <h3 class="font-mono text-xs font-bold text-slate-200 uppercase">Analyse NASA & Flask</h3>
+                    <p class="text-xs text-slate-400 mt-1">Évaluez instantanément les scores de conformité NHV et exportez votre configuration en JSON.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-900 px-8 py-4 text-center text-xs font-mono text-slate-500">
+        Habitat Studio 3D // Projet développé pour le NASA Space Apps Challenge 2026
+    </footer>
+
+    <script>
+        function startLaunchSequence() {
+            const splash = document.getElementById('splash-screen');
+            const status = document.getElementById('splash-status');
+            const bar = document.getElementById('splash-bar');
+            
+            splash.classList.remove('hidden');
+
+            const steps = [
+                { progress: '25%', text: 'Connexion aux serveurs NASA / Flask...' },
+                { progress: '65%', text: 'Initialisation du moteur Three.js...' },
+                { progress: '90%', text: 'Chargement des paramètres volumétriques...' },
+                { progress: '100%', text: 'Accès autorisé. Bienvenue à bord.' }
+            ];
+
+            let stepIdx = 0;
+            const interval = setInterval(() => {
+                if (stepIdx < steps.length) {
+                    bar.style.width = steps[stepIdx].progress;
+                    status.innerText = steps[stepIdx].text;
+                    stepIdx++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        window.location.href = '/studio';
+                    }, 400);
+                }
+            }, 500);
+        }
+    </script>
+</body>
+</html>
